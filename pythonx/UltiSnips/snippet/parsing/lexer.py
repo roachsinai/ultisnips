@@ -279,7 +279,11 @@ class ChoicesToken(Token):
         next(stream)  # |
 
         choices_text = _parse_till_unescaped_char(stream, "|")[0]
+        choices_text = choices_text.replace("\,", "\__")
         self.choice_list = choices_text.split(",")
+        for idx, choice in enumerate(self.choice_list):
+            self.choice_list[idx] = self.choice_list[idx].replace("\__", ",")
+        choices_text = choices_text.replace("\__", ",")
         self.initial_text = "|{0}|".format(choices_text)
 
         _parse_till_closing_brace(stream)
